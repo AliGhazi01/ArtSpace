@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -27,11 +28,14 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialogDefaults.containerColor
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collection.mutableVectorOf
 import androidx.compose.runtime.getValue
@@ -43,8 +47,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.BrushPainter
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,6 +74,7 @@ data class Painting(
     val description : String?
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArtSpaceLayout(modifier: Modifier = Modifier) {
     var listIndex  by remember { mutableStateOf(0) }
@@ -77,51 +84,88 @@ fun ArtSpaceLayout(modifier: Modifier = Modifier) {
         Painting(R.drawable.butterfree_melancholy, "Butterfree Melancholy" ,null)
     )
 
-    Box(
-        modifier = Modifier.fillMaxSize().background(Color.LightGray),
-        contentAlignment = Alignment.Center,
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        )
-        {
-            Button(
-                onClick = { if (listIndex == 0)  listIndex = paintings.size - 1 else listIndex--},
-                modifier = Modifier.fillMaxHeight()
-                    .width(80.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
-            ) { Text("")}
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                colors = topAppBarColors(
+                    containerColor = Color(0xff3f312f),
+                    titleContentColor = Color.White,
+                    actionIconContentColor = Color.White
+                ),
+                title = { Text("ArtSpace")},
+                actions = {
+                    IconButton(
+                        onClick = {
 
-            Button(
-                onClick = {if (listIndex == paintings.size - 1)  listIndex = 0 else listIndex++},
-                modifier = Modifier.fillMaxHeight()
-                    .width(80.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
-            ) { Text("")}
+                        }
+                    ) {
+                        Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
+                    }
+                    VerticalDivider(
+                        modifier = Modifier.height(24.dp),
+                        color = Color.White
+                    )
+                    IconButton(
+                        onClick = {
+
+                        }
+                    ) {
+                        Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+                    }
+                }
+            )
         }
-        Column(
-            modifier = Modifier
-                .background(Color.White)
-//                .border(10.dp, Color(0xFF432804))
-                .padding(20.dp)
+    ) { paddingValues ->
 
+        Box(
+            modifier = Modifier.fillMaxSize().background(colorResource(R.color.content_Background)).padding(paddingValues),
+            contentAlignment = Alignment.Center,
         ) {
-            Image(
-                modifier = Modifier,
-                painter = painterResource(paintings[listIndex].painter),
-                contentDescription = ""
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             )
-            Text(
-                text = if (paintings[listIndex].title != null )
-                    "\"${paintings[listIndex].title!!}\"" else "" ,
-                modifier = Modifier.padding(top = 10.dp),
-                fontSize = 24.sp,
-                fontStyle = FontStyle.Italic
-            )
-            Text(
-                text = paintings[listIndex].description ?: ""
-            )
+            {
+                Button(
+                    onClick = {
+                        if (listIndex == 0) listIndex = paintings.size - 1 else listIndex--
+                    },
+                    modifier = Modifier.fillMaxHeight()
+                        .width(80.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+                ) { Text("") }
+
+                Button(
+                    onClick = {
+                        if (listIndex == paintings.size - 1) listIndex = 0 else listIndex++
+                    },
+                    modifier = Modifier.fillMaxHeight()
+                        .width(80.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+                ) { Text("") }
+            }
+            Column(
+                modifier = Modifier
+                    .shadow(elevation = 8.dp, clip = true)
+                    .background(Color.White)
+                    .padding(20.dp)
+            ) {
+                Image(
+                    modifier = Modifier,
+                    painter = painterResource(paintings[listIndex].painter),
+                    contentDescription = ""
+                )
+                Text(
+                    text = if (paintings[listIndex].title != null)
+                        "\"${paintings[listIndex].title!!}\"" else "",
+                    modifier = Modifier.padding(top = 10.dp),
+                    fontSize = 24.sp,
+                    fontStyle = FontStyle.Italic
+                )
+                Text(
+                    text = paintings[listIndex].description ?: ""
+                )
+            }
         }
     }
 }
