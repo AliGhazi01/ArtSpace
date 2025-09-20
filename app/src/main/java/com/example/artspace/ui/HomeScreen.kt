@@ -19,7 +19,7 @@ import com.example.artspace.R
 import com.example.artspace.data.ArtPiece
 
 @Composable
-fun HomeScreen(navController: NavHostController, artViewModel: ArtViewModel = viewModel()) {
+fun HomeScreen(navController: NavHostController, artViewModel: ArtViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()

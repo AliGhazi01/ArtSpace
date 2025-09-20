@@ -33,16 +33,16 @@ import com.example.artspace.data.ArtPiece
 import com.example.artspace.ui.theme.ArtSpaceTheme
 
 @Composable
-fun EditScreen() {
-    val artPiece = ArtPiece(R.drawable.psyduck, "Psyduck Psychedelia" ,null)
-    var title by remember { mutableStateOf(artPiece.title ?: "") }
+fun EditScreen(artViewModel: ArtViewModel) {
+    val artPiece = artViewModel.selectedArtPiece
+    var title by remember { mutableStateOf(artPiece?.title ?: "") }
     Column(
         modifier = Modifier.Companion.fillMaxWidth()
             .padding(5.dp),
         horizontalAlignment = Alignment.Companion.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(artPiece.imageResId),
+            painter = painterResource(artPiece!!.imageResId),
             contentDescription = null,
             contentScale = ContentScale.Companion.Crop,
             modifier = Modifier.Companion.fillMaxWidth()
@@ -50,7 +50,10 @@ fun EditScreen() {
         )
         OutlinedTextField(
             value = title,
-            onValueChange = {title = it},
+            onValueChange = {
+                title = it
+                artViewModel.updateTitle(title)
+                            },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             label = { Text("Title") }
@@ -63,6 +66,6 @@ fun EditScreen() {
 @Composable
 fun ArtSpaceLayoutPreview() {
     ArtSpaceTheme {
-        EditScreen()
+//        EditScreen()
     }
 }

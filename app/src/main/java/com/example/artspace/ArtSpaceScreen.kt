@@ -24,12 +24,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.artspace.data.Routes
+import com.example.artspace.ui.ArtViewModel
 import com.example.artspace.ui.EditScreen
 import com.example.artspace.ui.HomeScreen
 import com.example.artspace.ui.theme.ArtSpaceTheme
@@ -40,6 +42,7 @@ import com.example.artspace.ui.theme.ArtSpaceTheme
 @Composable
 fun ArtSpaceLayout(
     modifier: Modifier = Modifier,
+    artViewModel: ArtViewModel = viewModel(),
     navController : NavHostController = rememberNavController()
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -97,7 +100,7 @@ fun ArtSpaceLayout(
                         },
                         actions = {
                             IconButton(
-                                onClick = {}
+                                onClick = { navController.popBackStack() }
                             ) {
                                 Icon(imageVector = Icons.Default.Check, contentDescription = "Save")
                             }
@@ -114,10 +117,10 @@ fun ArtSpaceLayout(
             modifier = modifier.padding(innerPadding)
         ) {
             composable(route = Routes.HOME) {
-                HomeScreen(navController = navController)
+                HomeScreen(navController = navController, artViewModel = artViewModel)
             }
             composable(route = Routes.EDIT) {
-                EditScreen()
+                EditScreen(artViewModel = artViewModel)
             }
         }
 
