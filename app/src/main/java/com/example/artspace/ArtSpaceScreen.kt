@@ -24,10 +24,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.startActivityForResult
@@ -39,10 +41,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.artspace.data.Routes
 import com.example.artspace.ui.ArtViewModel
+import com.example.artspace.ui.ArtWorkViewModel
 import com.example.artspace.ui.EditScreen
 import com.example.artspace.ui.HomeScreen
 import com.example.artspace.ui.theme.ArtSpaceTheme
-
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,20 +54,36 @@ import com.example.artspace.ui.theme.ArtSpaceTheme
 fun ArtSpaceLayout(
     modifier: Modifier = Modifier,
     artViewModel: ArtViewModel = viewModel(),
+    artWorkViewModel: ArtWorkViewModel = viewModel(),
     navController : NavHostController = rememberNavController()
 ) {
+    val context = LocalContext.current
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+
     val currentRoute = navBackStackEntry?.destination?.route
 
     // State to hold the selected image URI
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
+    val coroutineScope = rememberCoroutineScope()
     // Launcher for picking an image
     val pickImageLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
-        if (uri != null) {
-            selectedImageUri = uri
+        uri?.let {
+            try {
+                context.contentResolver.takePersistableUriPermission(
+                    it,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+            } catch (e: SecurityException) {
+                e.printStackTrace()
+            }
+
+            coroutineScope.launch {
+                artWorkViewModel.addArtWork(uri)
+            }
         }
     }
 
@@ -92,7 +112,7 @@ fun ArtSpaceLayout(
                             )
                             IconButton(
                                 onClick = {
-                                    pickImageLauncher.launch("image/*")
+                                    pickImageLauncher.launch(arrayOf("image/*"))
                                 }
                             ) {
                                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
@@ -136,10 +156,10 @@ fun ArtSpaceLayout(
             modifier = modifier.padding(innerPadding)
         ) {
             composable(route = Routes.HOME) {
-                HomeScreen(navController = navController, artViewModel = artViewModel)
+                HomeScreen(navController = navController, artViewModel = artViewModel, artWorkViewModel = artWorkViewModel)
             }
             composable(route = Routes.EDIT) {
-                EditScreen(artViewModel = artViewModel)
+                EditScreen(artViewModel = artViewModel, artWorkViewModel = artWorkViewModel)
             }
         }
 
@@ -151,7 +171,5 @@ fun ArtSpaceLayout(
 @Composable
 fun ArtSpaceLayoutPreview() {
     ArtSpaceTheme {
-        ArtSpaceLayout()
-//        EditScreen()
     }
 }

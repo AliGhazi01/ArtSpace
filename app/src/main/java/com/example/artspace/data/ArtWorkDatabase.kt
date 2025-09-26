@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import kotlin.jvm.java
 
 @Database(entities = [ArtWork::class], version = 1, exportSchema = false)
+@TypeConverters(UriConverter::class)
 abstract class ArtWorkDatabase() : RoomDatabase() {
     abstract fun artWorkDao(): ArtWorkDao
     companion object {

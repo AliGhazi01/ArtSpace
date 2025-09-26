@@ -63,4 +63,7 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
+
+    // Coil (ImageLoading)
+    implementation("io.coil-kt:coil-compose:2.7.0")
 }

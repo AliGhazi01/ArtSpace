@@ -36,7 +36,7 @@ import com.example.artspace.ui.theme.ArtSpaceTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditScreen(artViewModel: ArtViewModel) {
+fun EditScreen(artViewModel: ArtViewModel, artWorkViewModel: ArtWorkViewModel) {
 
     val artPiece = artViewModel.selectedArtPiece
     var title by remember { mutableStateOf(artPiece?.title ?: "") }
@@ -76,7 +76,6 @@ fun EditScreen(artViewModel: ArtViewModel) {
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text("Title") },
-                    colors = TextFieldDefaults.textFieldColors(Color.Black, Color.Black)
                 )
             }
         }
