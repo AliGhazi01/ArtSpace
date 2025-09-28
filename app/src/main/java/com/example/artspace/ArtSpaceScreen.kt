@@ -53,7 +53,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun ArtSpaceLayout(
     modifier: Modifier = Modifier,
-    artViewModel: ArtViewModel = viewModel(),
     artWorkViewModel: ArtWorkViewModel = viewModel(),
     navController : NavHostController = rememberNavController()
 ) {
@@ -156,10 +155,10 @@ fun ArtSpaceLayout(
             modifier = modifier.padding(innerPadding)
         ) {
             composable(route = Routes.HOME) {
-                HomeScreen(navController = navController, artViewModel = artViewModel, artWorkViewModel = artWorkViewModel)
+                HomeScreen(navController = navController, artWorkViewModel = artWorkViewModel)
             }
             composable(route = Routes.EDIT) {
-                EditScreen(artViewModel = artViewModel, artWorkViewModel = artWorkViewModel)
+                EditScreen(artWorkViewModel = artWorkViewModel)
             }
         }
 

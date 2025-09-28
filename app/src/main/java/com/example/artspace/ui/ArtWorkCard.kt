@@ -43,6 +43,7 @@ fun ArtWorkCard(
             .fillMaxWidth()
             .padding(vertical = 50.dp)
             .clickable {
+                artWorkViewModel.selectArtWork(artWork)
                 navController.navigate(Routes.EDIT)
             },
         shape = RoundedCornerShape(4.dp),

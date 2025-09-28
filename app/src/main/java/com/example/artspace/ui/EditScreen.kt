@@ -1,5 +1,6 @@
 package com.example.artspace.ui
 
+import android.R.attr.contentDescription
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,20 +27,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.artspace.R
 import com.example.artspace.data.Routes
 import com.example.artspace.ui.theme.ArtSpaceTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditScreen(artViewModel: ArtViewModel, artWorkViewModel: ArtWorkViewModel) {
+fun EditScreen(artWorkViewModel: ArtWorkViewModel) {
 
-    val artPiece = artViewModel.selectedArtPiece
-    var title by remember { mutableStateOf(artPiece?.title ?: "") }
+    val artWork = artWorkViewModel.selectedArtWork
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -54,24 +56,21 @@ fun EditScreen(artViewModel: ArtViewModel, artWorkViewModel: ArtWorkViewModel) {
             elevation = CardDefaults.cardElevation(8.dp)
         ) {
             Column(
-                modifier = Modifier.Companion
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(5.dp),
-                horizontalAlignment = Alignment.Companion.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(
-                    painter = painterResource(artPiece!!.imageResId),
+                AsyncImage(
+                    model = artWork!!.uri,
                     contentDescription = null,
-                    contentScale = ContentScale.Companion.Crop,
-                    modifier = Modifier.Companion
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(4.dp))
+                    modifier = Modifier.fillMaxWidth(),
+                    contentScale = ContentScale.Fit,
+                    error = painterResource(R.drawable.psyduck)
                 )
                 OutlinedTextField(
-                    value = title,
+                    value = artWork!!.title,
                     onValueChange = {
-                        title = it
-                        artViewModel.updateTitle(title)
                     },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),

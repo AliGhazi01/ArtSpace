@@ -24,7 +24,7 @@ import com.example.artspace.data.ArtPiece
 import com.example.artspace.ui.theme.ArtSpaceTheme
 
 @Composable
-fun HomeScreen(navController: NavHostController, artViewModel: ArtViewModel, artWorkViewModel: ArtWorkViewModel) {
+fun HomeScreen(navController: NavHostController, artWorkViewModel: ArtWorkViewModel) {
     val artWorks by artWorkViewModel.artWorks.collectAsState(initial = emptyList())
     Box(
         modifier = Modifier
@@ -32,25 +32,6 @@ fun HomeScreen(navController: NavHostController, artViewModel: ArtViewModel, art
             .background(colorResource(R.color.content_Background)),
         contentAlignment = Alignment.Center
     ) {
-//        LazyColumn(
-//            modifier = Modifier
-//                .fillMaxWidth(0.9f)
-//        ) {
-//            items(
-//                listOf(
-//                    ArtPiece(R.drawable.psyduck, "Psyduck Psychedelia" ),
-//                    ArtPiece(R.drawable.lonely_pikachu, "Pikachu Peace"),
-//                    ArtPiece(R.drawable.butterfree_melancholy, "Butterfree Melancholy" )
-//                )
-//            ) { artPiece ->
-//                ArtPieceCard(
-//                    artPiece = artPiece,
-//                    artViewModel = artViewModel,
-//                    modifier = Modifier,
-//                    navController
-//                )
-//            }
-//        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
