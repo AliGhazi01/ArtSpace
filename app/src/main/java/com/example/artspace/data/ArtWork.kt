@@ -8,6 +8,6 @@ import androidx.room.PrimaryKey
 data class ArtWork(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val title: String = "",
-    val uri: Uri
+    var title: String = "",
+    val uri: Uri?
 )

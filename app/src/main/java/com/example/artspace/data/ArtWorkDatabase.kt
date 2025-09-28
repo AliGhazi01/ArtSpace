@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import kotlin.jvm.java
 
-@Database(entities = [ArtWork::class], version = 1, exportSchema = false)
+@Database(entities = [ArtWork::class], version = 2, exportSchema = false)
 @TypeConverters(UriConverter::class)
 abstract class ArtWorkDatabase() : RoomDatabase() {
     abstract fun artWorkDao(): ArtWorkDao
@@ -18,6 +18,7 @@ abstract class ArtWorkDatabase() : RoomDatabase() {
         fun getDatabase(context: Context): ArtWorkDatabase {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, ArtWorkDatabase::class.java, "artwork_database")
+                    .fallbackToDestructiveMigration()
                     .build().also{ Instance = it }
             }
         }

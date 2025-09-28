@@ -138,7 +138,13 @@ fun ArtSpaceLayout(
                         },
                         actions = {
                             IconButton(
-                                onClick = { navController.popBackStack() }
+                                onClick = {
+                                    artWorkViewModel.updateArtWorkTitle()
+                                    coroutineScope.launch {
+                                        artWorkViewModel.updateArtWork(artWorkViewModel.selectedArtWork)
+                                    }
+                                    navController.popBackStack()
+                                }
                             ) {
                                 Icon(imageVector = Icons.Default.Check, contentDescription = "Save")
                             }

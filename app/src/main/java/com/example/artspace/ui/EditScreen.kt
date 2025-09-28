@@ -15,6 +15,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -42,6 +43,7 @@ import com.example.artspace.ui.theme.ArtSpaceTheme
 fun EditScreen(artWorkViewModel: ArtWorkViewModel) {
 
     val artWork = artWorkViewModel.selectedArtWork
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -62,15 +64,16 @@ fun EditScreen(artWorkViewModel: ArtWorkViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AsyncImage(
-                    model = artWork!!.uri,
+                    model = artWork.uri ?: "",
                     contentDescription = null,
                     modifier = Modifier.fillMaxWidth(),
                     contentScale = ContentScale.Fit,
                     error = painterResource(R.drawable.psyduck)
                 )
-                OutlinedTextField(
-                    value = artWork!!.title,
-                    onValueChange = {
+                TextField(
+                    value = artWorkViewModel.updatedTitle,
+                    onValueChange = { newValue ->
+                        artWorkViewModel.updatedTitle = newValue
                     },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
